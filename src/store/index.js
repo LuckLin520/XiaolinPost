@@ -17,7 +17,7 @@ export default new Vuex.Store({
     },
     {
       key: 'User-Agent',
-      value: 'XiaolinPostRuntime/' + require('../../package.json').version,
+      value: 'xiaolin-post/' + require('../../package.json').version,
       isDefault: true
     },
     {

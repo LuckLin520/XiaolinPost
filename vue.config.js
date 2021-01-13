@@ -13,4 +13,7 @@ module.exports = {
         },
       },
     },
+    publicPath: './', //改成这样
+    // outputDir: 'dist',
+    // assetsDir: './static', //改成这样
   };

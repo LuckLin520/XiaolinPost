@@ -32,7 +32,7 @@ export default {
     return {
       activeKey: 0,
       panes: [],
-      newTabIndex: 0,
+      newTabIndex: 0
     };
   },
   methods: {
@@ -89,8 +89,33 @@ export default {
       }
       obj[type].bind(this)()
     },
-    onSend(params) {
-      console.log(params)
+    async onSend(params) {
+      /^https?:\/\//.test(params.address)
+      let url = params.address || '/'
+      url = /^https?:\/\//.test(params.address) ? params.address : 'http://'+params.address
+      let res = undefined
+      if(params.proxy){
+        res = await this.$axios({
+          url: 'http://127.0.0.1:8888/XIAOLIN-POST',
+          method: 'POST',
+          data: {
+            url,
+            method: params.method,
+            params: params.params,
+            data: params.bodys,
+            headers: params.headers
+          }
+        })
+      }else{
+        res = await this.$axios({
+          url,
+          method: params.method,
+          params: params.params,
+          data: params.bodys,
+          headers: params.headers
+        })
+      }
+      console.log(res)
     }
   }
 }

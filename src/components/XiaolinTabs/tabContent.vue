@@ -7,6 +7,7 @@
             </a-select>
             <a-input placeholder="Enter request URL" :value="allURL" @change="addressChange"/>
         </a-input-group>
+        <a-switch checked-children="关闭代理" un-checked-children="启用代理" v-model="proxy"/>
         <a-button type="primary" icon="rocket" style="margin-left:14px;font-weight:600" size='large' @click="onSend">Send</a-button>
     </div>
     <div class="optionbox">
@@ -70,6 +71,7 @@ export default {
         return {
             methodOption,
             method: methodOption.GET,
+            proxy: false,
             address: undefined,
             currentParams: '',
 
@@ -105,7 +107,14 @@ export default {
     },
     methods: {
         onSend() {
-            this.$emit('onSend', {method: this.method, address: this.address, params: this.$refs['KeyValueParams'].json, headers: this.headers, bodys: this.bodys})
+            this.$emit('onSend', {
+                method: this.method,
+                address: this.address,
+                params: this.$refs['KeyValueParams'].json,
+                headers: this.headers,
+                bodys: this.$store.state.bodys,
+                proxy: this.proxy
+            })
         },
         addressChange(e) {
             let val = e.target.value
@@ -131,8 +140,11 @@ export default {
     .formbox{
         position: relative;
         display: flex;
+        align-items: center;
         .ant-input-group{
             display: flex;
+            flex: 1;
+            margin-right: 15px;
             /deep/ .ant-select{
                 .ant-select-selection{
                     background: rgb(240,240,240);
