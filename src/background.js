@@ -18,8 +18,8 @@ async function createWindow() {
   require('./backServer');
   // Create the browser window.
   const win = new BrowserWindow({
-    width: 1100,
-    height: 800,
+    width: 1200,
+    height: 850,
     // icon: require('path').join(__dirname,'../public/favicon.ico'),
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
