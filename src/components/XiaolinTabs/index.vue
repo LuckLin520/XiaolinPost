@@ -44,13 +44,14 @@ export default {
     onEdit(targetKey, action) {
       this[action](targetKey);
     },
-    add() {
+    add(condition) {
       const panes = this.panes;
       const activeKey = this.newTabIndex++;
       const obj = {
         title: 'Untitled Request',
         key: activeKey,
-        method: 'GET'
+        method: 'GET',
+        condition
       }
       panes.splice(panes.length,0,obj);
       this.panes = panes;
@@ -90,9 +91,32 @@ export default {
       obj[type].bind(this)()
     },
     async onSend(params) {
-      /^https?:\/\//.test(params.address)
+      let history = localStorage.history ? JSON.parse(localStorage.history) : []
+      history.push(params)
+      localStorage.history = JSON.stringify(history)
+
+      ;/^https?:\/\//.test(params.address)
       let url = params.address || '/'
       url = /^https?:\/\//.test(params.address) ? params.address : 'http://'+params.address
+      if(params.headers['Content-Type'] === 'multipart/form-data') {
+        const formdata = new FormData();
+        for(let key in params.bodys) {
+          if(typeof params.bodys[key] === 'string') {
+            formdata.append(key, params.bodys[key]);
+          }else if(typeof params.bodys[key] === 'object') {
+            params.bodys[key].forEach(v=>{
+              formdata.append((!key || key === 'undefined')?"":key, v, v.name);
+            })
+          }
+        }
+        params.bodys = formdata
+      }else if(params.headers['Content-Type'] === 'x-www-form-urlencoded') {
+        const formdata = new URLSearchParams();
+        for(let key in params.bodys) {
+          formdata.append((!key || key === 'undefined')?"":key, params.bodys[key]);
+        }
+        params.bodys = formdata
+      }
       let res = undefined
       if(params.proxy){
         res = await this.$axios({
@@ -124,6 +148,7 @@ export default {
 <style scoped lang="less">
 .XiaolinTabs{
     background: rgb(250,250,250);
+    flex: 1;
   >.ant-tabs{
     overflow: initial;
     background: #fff;

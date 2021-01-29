@@ -14,7 +14,7 @@
         <a-tabs :v-model="activeKey" :animated="false">
             <a-tab-pane key="Params">
                 <div class="optionLabel">Query Params</div>
-                <KeyValueParams @changeParams="changeParams" :currentParams="currentParams" ref="KeyValueParams"/>
+                <KeyValueParams @changeParams="changeParams" :currentParams="currentParams" :params="params" ref="KeyValueParams"/>
                 <span slot="tab">
                     <a-badge :color="currentParams?'green':'transparent'">
                         <span>Params</span>
@@ -27,13 +27,13 @@
                     <span>Headers</span>
                     <span class="hid" @click="showHid = !showHid"><a-icon :type="showHid?'eye':'eye-invisible'"/>{{showHid?' Hide auto-generated headers': (' '+ len + ' Hidden')}}</span>
                 </div>
-                <KeyValueHeaders :showHid="showHid" :headers.sync="headers"/>
+                <KeyValueHeaders :showHid="showHid" :headers.sync="headers" ref="KeyValueHeaders"/>
             </a-tab-pane>
             <a-tab-pane key="Body" forceRender>
                 <a-badge slot="tab" :color="isShowBodysDot?'green':'transparent'">
                     <span>Body</span>
                 </a-badge>
-                <BodyContentType/>
+                <BodyContentType :cttype="cttype" :cond="cond"/>
             </a-tab-pane>
         </a-tabs>
     </div>
@@ -74,6 +74,9 @@ export default {
             proxy: false,
             address: undefined,
             currentParams: '',
+            params: {},
+            cttype: '',
+            cond: null,
 
             activeKey: 'Params',
             showHid: true,
@@ -103,7 +106,30 @@ export default {
         },
         "$store.state.defaultHeaders.length"(n){
             this.len = n
+        },
+        method(n) {
+            this.panes.forEach(v=> {
+                if(v.key === this.itemKey) v.method = n
+            })
         }
+    },
+    mounted() {
+        this.panes.forEach(v=> {
+            console.log(v.condition)
+            if(v.key === this.itemKey && v.condition) {
+                v.method = v.condition.method
+                this.proxy = v.condition.proxy
+                this.address = v.condition.address
+                this.params = v.condition.params
+                if(Object.keys(v.condition.headers).length){
+                    this.$refs['KeyValueHeaders'].onJsonChange(v.condition.headers)
+                }
+                if(v.condition.headers['Content-Type']) {
+                    this.cttype = v.condition.headers['Content-Type'] === 'multipart/form-data' ? 'form-data' : v.condition.headers['Content-Type']
+                    this.cond = v.condition.bodys
+                }
+            }
+        })
     },
     methods: {
         onSend() {

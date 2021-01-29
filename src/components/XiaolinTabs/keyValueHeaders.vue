@@ -51,7 +51,8 @@ const columns = [
 ];
 export default {
     props: {
-        showHid: Boolean
+        showHid: Boolean,
+        headers: Object
     },
     components: {vueJsonEditor},
     data() {

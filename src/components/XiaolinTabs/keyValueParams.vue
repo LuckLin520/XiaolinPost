@@ -53,7 +53,8 @@ export default {
   props: {
       currentParams: {
           type: String
-      }
+      },
+      params: Object
   },
   components: {vueJsonEditor},
   data() {
@@ -128,6 +129,9 @@ export default {
                 }
             })
          }
+     },
+     params(n) {
+         this.onJsonChange(n)
      }
   },
   methods: {

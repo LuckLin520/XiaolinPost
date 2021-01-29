@@ -13,8 +13,8 @@
     </div>
     <a-divider style="margin: 14px 0"/>
     <div v-show="typeKey === 'none'" class="none">This request does not have a body</div>
-    <KeyValueBodys v-show="typeKey === 'form-data'" key="0" v-model="json1" :typeKey="typeKey"/>
-    <KeyValueBodys v-show="typeKey === 'x-www-form-urlencoded'" key="1" v-model="json2"/>
+    <KeyValueBodys v-show="typeKey === 'form-data'" key="0" v-model="json1" :typeKey="typeKey" ref="form-data"/>
+    <KeyValueBodys v-show="typeKey === 'x-www-form-urlencoded'" key="1" v-model="json2" ref="x-www-form-urlencoded"/>
     <vue-json-editor
         v-show="typeKey === 'raw' && rawKey === 'JSON'"
         :show-btns="false"
@@ -43,6 +43,7 @@ import KeyValueBodys from './keyValueBodys'
 import vueJsonEditor from 'vue-json-editor'
 export default {
     components: {KeyValueBodys,vueJsonEditor},
+    props: ['cttype', 'cond'],
     data() {
         return {
             typeKey: 'none',
@@ -89,11 +90,11 @@ export default {
                     if(!item) {
                         this.defaultHeaders.splice(0,0,{
                             key: 'Content-Type',
-                            value: n,
+                            value: 'multipart/form-data',
                             isDefault: true
                         })
                     }else{
-                        item.value = n
+                        item.value = 'multipart/form-data'
                     }
                     break;
                 }
@@ -142,6 +143,53 @@ export default {
                 item.value = type
             }
             this.$store.commit('save', {defaultHeaders: this.defaultHeaders})
+        },
+        json1(n) {
+            this.$store.commit('save',{bodys: n})
+        },
+        json2(n) {
+            this.$store.commit('save',{bodys: n})
+        },
+        cttype() {
+            if(this.cttype === 'form-data') {
+                let json = this.cond || {}
+                if(Object.keys(json).length) {
+                    let data = []
+                    for(let key in json) {
+                        data.push({
+                            key,
+                            value: typeof json[key] === 'string' ? json[key] : '',
+                            type: typeof json[key] === 'string' ? 'Text' : 'File',
+                            files: []
+                        })
+                    }
+                    this.$refs['form-data'].data = data
+                    this.typeKey = this.cttype
+                }
+            }else if(this.cttype === 'x-www-form-urlencoded') {
+                let json = this.cond || {}
+                if(Object.keys(json).length) {
+                    let data = []
+                    for(let key in json) {
+                        data.push({
+                            key,
+                            value: json[key],
+                            type: 'Text',
+                            files: []
+                        })
+                    }
+                    this.$refs['x-www-form-urlencoded'].data = data
+                    this.typeKey = this.cttype
+                }
+            }else{
+                this.raws.forEach(v=>{
+                    if(v.value === this.cttype) {
+                        this.rawData = this.cond || {}
+                        this.rawKey = v.label
+                    }
+                })
+                this.typeKey = 'raw'
+            }
         }
     },
     methods: {
