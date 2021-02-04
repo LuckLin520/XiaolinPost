@@ -35,6 +35,11 @@ export default {
       newTabIndex: 0
     };
   },
+  computed: {
+      history() {
+          return this.$store.state.history
+      }
+  },
   methods: {
     onChange(key) {
       if(key === 'add') this.add()
@@ -91,9 +96,9 @@ export default {
       obj[type].bind(this)()
     },
     async onSend(params) {
-      let history = localStorage.history ? JSON.parse(localStorage.history) : []
-      history.push(params)
-      localStorage.history = JSON.stringify(history)
+      params._TIME = Date.now()
+      this.history.push(params)
+      this.$store.commit('save', {history: this.history})
 
       ;/^https?:\/\//.test(params.address)
       let url = params.address || '/'

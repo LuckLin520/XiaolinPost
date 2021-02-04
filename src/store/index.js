@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   state: {
     defaultHeaders: [{
       key: 'XiaolinPost-Token',
@@ -35,7 +35,9 @@ export default new Vuex.Store({
       value: 'keep-alive',
       isDefault: true
     }],
-    bodys: {}
+    bodys: {},
+    history: localStorage.history ? JSON.parse(localStorage.history) : [],
+    loading: false
   },
   mutations: {
     save(state, payload) {
@@ -49,3 +51,7 @@ export default new Vuex.Store({
   modules: {
   }
 })
+store.subscribe((mutation) => {
+  if(mutation.payload.history) localStorage.history = JSON.stringify(mutation.payload.history)
+})
+export default store

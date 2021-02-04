@@ -8,7 +8,7 @@
             <a-input placeholder="Enter request URL" :value="allURL" @change="addressChange"/>
         </a-input-group>
         <a-switch checked-children="关闭代理" un-checked-children="启用代理" v-model="proxy"/>
-        <a-button type="primary" icon="rocket" style="margin-left:14px;font-weight:600" size='large' @click="onSend">Send</a-button>
+        <a-button type="primary" :icon="$store.state.loading?'loading':'rocket'" style="margin-left:14px;font-weight:600" size='large' @click="onSend" :disabled="$store.state.loading">Send</a-button>
     </div>
     <div class="optionbox">
         <a-tabs :v-model="activeKey" :animated="false">
@@ -122,7 +122,15 @@ export default {
                 this.address = v.condition.address
                 this.params = v.condition.params
                 if(Object.keys(v.condition.headers).length){
-                    this.$refs['KeyValueHeaders'].onJsonChange(v.condition.headers)
+                    let keyArr = this.$store.state.defaultHeaders.map(b=>b.key)
+                    console.log(keyArr)
+                    let obj = {}
+                    for(let key in v.condition.headers) {
+                        let idx = keyArr.indexOf(key)
+                        if(idx > -1) this.$store.state.defaultHeaders[idx].value = v.condition.headers[key]
+                        else if(key != 'Content-Type') obj[key] = v.condition.headers[key]
+                    }
+                    this.$refs['KeyValueHeaders'].onJsonChange(obj)
                 }
                 if(v.condition.headers['Content-Type']) {
                     this.cttype = v.condition.headers['Content-Type'] === 'multipart/form-data' ? 'form-data' : v.condition.headers['Content-Type']

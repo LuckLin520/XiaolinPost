@@ -1,7 +1,6 @@
 // util.js
 import axios from 'axios'
-// import cookies from 'vue-cookies'
-// import router from 'vue-router'
+import store from '@/store'
 export const $axios = axios.create({ // 自定义一个实例，用于timeout 等一些方法
   timeout: 60000,
 })
@@ -9,6 +8,7 @@ export const $axios = axios.create({ // 自定义一个实例，用于timeout �
 // 拦截请求
 $axios.interceptors.request.use(
   config => {
+    store.commit('save',{loading: true})
     // console.log(config);
     // let t = cookies.get('t')
     // if (t) {
@@ -27,6 +27,7 @@ $axios.interceptors.request.use(
 $axios.interceptors.response.use(
   response => {
     // console.log(response)
+    store.commit('save',{loading: false})
     return response
   },
   err => {
@@ -41,6 +42,7 @@ $axios.interceptors.response.use(
     //       })
     //   }
     // }
+    store.commit('save',{loading: false})
     return Promise.reject(err)
   }
 )
