@@ -15,4 +15,13 @@
   height: 300px;
 }
 
+.method{
+  font-weight: 600;
+  &.GET{
+    color: green;
+  }
+  &.POST{
+    color: orange;
+  }
+}
 </style>

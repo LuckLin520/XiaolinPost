@@ -11,7 +11,7 @@
         <a-button type="primary" :icon="$store.state.loading?'loading':'rocket'" style="margin-left:14px;font-weight:600" size='large' @click="onSend" :disabled="$store.state.loading">Send</a-button>
     </div>
     <div class="optionbox">
-        <a-tabs :v-model="activeKey" :animated="false">
+        <a-tabs v-model="activeKey" :animated="false" @change="changgezz">
             <a-tab-pane key="Params">
                 <div class="optionLabel">Query Params</div>
                 <KeyValueParams @changeParams="changeParams" :currentParams="currentParams" :params="params" ref="KeyValueParams"/>
@@ -115,8 +115,10 @@ export default {
     },
     mounted() {
         this.panes.forEach(v=> {
-            console.log(v.condition)
             if(v.key === this.itemKey && v.condition) {
+                if((!v.condition.params || !Object.keys(v.condition.params).length) && (v.condition.bodys && Object.keys(v.condition.bodys).length)) {
+                    this.activeKey = "Body"
+                }
                 v.method = v.condition.method
                 this.proxy = v.condition.proxy
                 this.address = v.condition.address
@@ -164,6 +166,9 @@ export default {
         },
         changeParams(str) {
             this.currentParams = str
+        },
+        changgezz(tab) {
+            console.log(tab)
         }
     }
 }

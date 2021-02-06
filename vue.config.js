@@ -13,7 +13,12 @@ module.exports = {
         },
       },
     },
-    publicPath: './', //改成这样
-    // outputDir: 'dist',
-    // assetsDir: './static', //改成这样
+    publicPath: './',
+    chainWebpack: config => {
+      config.plugin('html')
+          .tap(args => {
+            args[0].title = process.VUE_CLI_SERVICE.pkg.name+' '+process.VUE_CLI_SERVICE.pkg.version;
+            return args;
+          })
+    }
   };

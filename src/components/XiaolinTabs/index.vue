@@ -21,6 +21,11 @@
         </a-dropdown>
       </a-tab-pane>
     </a-tabs>
+    <div class="picbox">
+      <img src="/favicon.ico"/>
+      <p class="desc">WELCOME TO XIAOLIN-POST REQUEST TOOL😘😘😘</p>
+      <p>concat:ZhiLin Zhao qq:502763576 tell:15348298177</p>
+    </div>
   </div>
 </template>
 
@@ -96,6 +101,7 @@ export default {
       obj[type].bind(this)()
     },
     async onSend(params) {
+      if(!params.address) return;
       params._TIME = Date.now()
       this.history.push(params)
       this.$store.commit('save', {history: this.history})
@@ -152,7 +158,7 @@ export default {
 
 <style scoped lang="less">
 .XiaolinTabs{
-    background: rgb(250,250,250);
+    // background: rgb(250,250,250);
     flex: 1;
   >.ant-tabs{
     overflow: initial;
@@ -170,15 +176,7 @@ export default {
         .myTabTitle{
           font-size: 12px;
           font-weight: initial;
-          .method{
-            font-weight: 600;
-            &.GET{
-              color: green;
-            }
-            &.POST{
-              color: orange;
-            }
-          }
+          
         }
         &.ant-tabs-tab-active{
           &::before{
@@ -193,6 +191,13 @@ export default {
       }
     }
   }
-
+  .picbox{
+    text-align: center;
+    padding-top: 50px;
+    .desc{
+      font-size: 18px;
+      margin: 20px 0;
+    }
+  }
 }
 </style>
