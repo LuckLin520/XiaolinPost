@@ -21,7 +21,7 @@
         </a-dropdown>
       </a-tab-pane>
     </a-tabs>
-    <div class="picbox">
+    <div class="picbox" v-if="!panes.length">
       <img src="/favicon.ico"/>
       <p class="desc">WELCOME TO XIAOLIN-POST REQUEST TOOL😘😘😘</p>
       <p>concat:ZhiLin Zhao qq:502763576 tell:15348298177</p>
@@ -104,9 +104,9 @@ export default {
       if(!params.address) return;
       params._TIME = Date.now()
       this.history.push(params)
-      this.$store.commit('save', {history: this.history})
+      this.$store.commit('save', {history: this.history});
 
-      ;/^https?:\/\//.test(params.address)
+      /^https?:\/\//.test(params.address)
       let url = params.address || '/'
       url = /^https?:\/\//.test(params.address) ? params.address : 'http://'+params.address
       if(params.headers['Content-Type'] === 'multipart/form-data') {

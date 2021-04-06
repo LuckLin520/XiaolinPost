@@ -1,24 +1,9 @@
 # xiaolin-post
 
-## Project setup
+## 一个模仿postman主要功能的请求工具
 ```
-yarn install
+完成历史记录搜索，多标签页各类请求发送，proxy请求，自定义header及请求参数
+
+ps:启动该程序会占用8888端口
 ```
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).

@@ -1,18 +1,24 @@
 <template>
 <div class="HistoryBox">
+    <div class="searchBox">
+        <a-input v-model="searchKey" placeholder="Filter">
+            <a-icon slot="prefix" type="search" />
+        </a-input>
+    </div>
     <a-tabs :animated="false">
             <a-tab-pane tab="History">
                 <a-menu
                     :default-open-keys="[0]"
                     mode="inline"
                 >
-                    <a-sub-menu v-for="(value,key,idx) in mapHistory" :key="idx">
+                    <a-sub-menu v-for="(value,key,idx) in filterHistory" :key="idx">
                         <span slot="title"><a-icon type="history" /><span>{{key}}</span></span>
-                        <a-menu-item v-for="item of mapHistory[key]" :key="item._TIME" @click="readCondition(item)">
+                        <a-menu-item v-for="item of filterHistory[key]" :key="item._TIME" @click="readCondition(item)">
                             <span class="method" :class="{[item.method]: true}">{{item.method}}</span>
                             {{item.address}}
                         </a-menu-item>
                     </a-sub-menu>
+                    <a-empty :image="Empty.PRESENTED_IMAGE_SIMPLE" v-if="!Object.keys(mapHistory).length || !Object.keys(filterHistory).length" :description="!Object.keys(mapHistory).length ? `You haven't send any requests` : `No results found for '${searchKey}'`"/>
                 </a-menu>
             </a-tab-pane>
     </a-tabs>
@@ -21,7 +27,15 @@
 
 <script>
 import moment from 'moment'
+import { Empty } from 'ant-design-vue';
 export default {
+    data() {
+        return {
+            Empty,
+            filterHistory: {},
+            searchKey: undefined
+        }
+    },
     computed: {
         history() {
             return this.$store.state.history
@@ -46,6 +60,23 @@ export default {
             return re
         }
     },
+    beforeMount() {
+        this.filterHistory = this.mapHistory
+    },
+    watch: {
+        searchKey(n) {
+            if(!n) return this.filterHistory = this.mapHistory
+            let re = {}, obj = this.mapHistory;
+            for(let date in obj) {
+                obj[date].forEach(v=>{
+                    if(JSON.stringify(v).includes(n)){
+                        re[date] ? re[date].push(v) : re[date] = [v]
+                    } 
+                })
+            }
+            this.filterHistory = re
+        }
+    },
     methods: {
         readCondition(item) {
             this.$emit('readCondition', item)
@@ -66,5 +97,16 @@ export default {
             border-right: none;
         }
     }
+    .searchBox{
+        padding: 0 15px;
+        padding-top: 10px;
+        /deep/ .ant-input{
+            border-radius: 16px;
+            background: rgb(240,240,240);
+            &:focus{
+                background: #fff;
+            }
+        }
+    } 
 }
 </style>
