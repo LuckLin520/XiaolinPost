@@ -37,5 +37,8 @@
     "less-loader": "^6.0.0",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.5",
     "vue-template-compiler": "^2.6.11"
+  },
+  "win": {
+    "icon": "./public/favicon.ico"
   }
 }
