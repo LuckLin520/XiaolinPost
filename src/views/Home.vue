@@ -2,11 +2,11 @@
   <div class="home">
     <HistoryBox @readCondition="readCondition"/>
     <XiaolinTabs ref="XiaolinTabs"/>
+    <span class="fixedBtn">Ctrl+x open DevTools</span>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
 import XiaolinTabs from '@/components/XiaolinTabs'
 import HistoryBox from '@/components/HistoryBox'
 export default {
@@ -17,7 +17,6 @@ export default {
   },
   methods: {
     readCondition(item) {
-      console.log(item)
       this.$refs['XiaolinTabs'].add(item)
     }
   }
@@ -26,5 +25,10 @@ export default {
 <style lang="less" scoped>
 .home{
   display: flex;
+  .fixedBtn{
+    position: fixed;
+    right: 15px;
+    bottom: 20px;
+  }
 }
 </style>
