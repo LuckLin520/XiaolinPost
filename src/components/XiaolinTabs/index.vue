@@ -14,9 +14,9 @@
         <a-dropdown :trigger="['click']" slot="tab">
           <span style="padding:8px 16px">···</span>
           <a-menu slot="overlay">
-            <a-menu-item key="0" @click="closeTab('current')">Close Current Tab</a-menu-item>
-            <a-menu-item key="1" @click="closeTab('others')">Close Others Tabs</a-menu-item>
-            <a-menu-item key="3" @click="closeTab('all')">Close All Tabs</a-menu-item>
+            <a-menu-item :disabled="!panes.length" key="0" @click="closeTab('current')">Close Current Tab</a-menu-item>
+            <a-menu-item :disabled="!panes.length" key="1" @click="closeTab('others')">Close Others Tabs</a-menu-item>
+            <a-menu-item :disabled="!panes.length" key="3" @click="closeTab('all')">Close All Tabs</a-menu-item>
           </a-menu>
         </a-dropdown>
       </a-tab-pane>

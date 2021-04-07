@@ -75,6 +75,12 @@ export default {
                 })
             }
             this.filterHistory = re
+        },
+        mapHistory: {
+            handler(){
+                this.filterHistory = this.mapHistory
+            },
+            deep: true
         }
     },
     methods: {
