@@ -123,6 +123,7 @@ export default {
                 this.proxy = v.condition.proxy
                 this.address = v.condition.address
                 this.params = v.condition.params
+                this.method = v.condition.method || this.method
                 if(Object.keys(v.condition.headers).length){
                     let keyArr = this.$store.state.defaultHeaders.map(b=>b.key)
                     console.log(keyArr)

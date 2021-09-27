@@ -24,4 +24,14 @@
     color: orange;
   }
 }
+::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+  }
+::-webkit-scrollbar-thumb {
+    background: #ddd;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
 </style>

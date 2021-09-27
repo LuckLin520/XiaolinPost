@@ -35,9 +35,8 @@ export default {
   components: {TabContent},
   data() {
     return {
-      activeKey: 0,
-      panes: [],
-      newTabIndex: 0
+      activeKey: -1,
+      panes: []
     };
   },
   computed: {
@@ -52,11 +51,12 @@ export default {
       else this.activeKey = key
     },
     onEdit(targetKey, action) {
+      console.log(targetKey,action)
       this[action](targetKey);
     },
     add(condition) {
       const panes = this.panes;
-      const activeKey = this.newTabIndex++;
+      const activeKey = panes.length ? panes[panes.length - 1].key+1 : 0;
       const obj = {
         title: 'Untitled Request',
         key: activeKey,
@@ -64,6 +64,7 @@ export default {
         condition
       }
       panes.splice(panes.length,0,obj);
+
       this.panes = panes;
       this.activeKey = activeKey;
     },
